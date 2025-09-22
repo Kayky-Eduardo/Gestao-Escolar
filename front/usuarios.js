@@ -7,13 +7,13 @@ async function carregarUsuarios() {
     lista.innerHTML = "";
 
     Usuarios.forEach(u => {
-        const li = document.createElement("li");
+        const li = document.createElement("tr");
         li.innerHTML =`
-        <strong>ID:</strong> ${u.id_user} |
-        <strong>nome:</strong> ${u.nome_usuario} |
-        <strong>email: </strong>${u.email} |
-        <strong>cargo: </strong>${u.nome_cargo} |
-        <strong>nivel: </strong>${u.id_cargo}
+        <td>${u.id_user}</td>
+        <td>${u.nome_usuario}</td>
+        <td>${u.email}</td>
+        <td>${u.nome_cargo}</td>
+        <td>${u.id_cargo}</td>
         `;
 
         // excluir
@@ -46,7 +46,7 @@ async function carregarUsuarios() {
         carregarUsuarios();
         }
         
-        li.append("| ", btnExcluir, " | ", btnEditar)
+        li.append("  ", btnExcluir, "   ", btnEditar)
         lista.appendChild(li);
 
         

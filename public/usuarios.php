@@ -22,7 +22,20 @@ session_start();
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
         <input type="submit" id="cadastro_usuario" name="cadastro_profissionais" value="Cadastrar usuário">
     <?php endif; ?>
-    <ul id="listaResposta"></ul> <!-- Transformar em tabela --> 
+    <!-- <ul id="listaResposta"></ul> Transformar em tabela  -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Cargo</th>
+                <th>Nivel</th>
+            </tr>
+        </thead>
+        <tbody id="listaResposta">
+        </tbody>
+    </table>
     <script src="../front/usuarios.js">
     </script>
 </body>
