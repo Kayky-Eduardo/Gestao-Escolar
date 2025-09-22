@@ -29,7 +29,7 @@ function adicionarUsuario($conn, $nome, $email, $senha, $id_cargo) {
 
 function editarCampo($conn, $id_user, $campo, $valor) {
     // permitir apenas campos seguros
-    $permitidos = ['nome', 'email', 'senha', 'id_cargo'];
+    $permitidos = ['nome', 'nome_usuario', 'email', 'senha', 'id_cargo'];
     if (!in_array($campo, $permitidos)) {
         return false;
     }
@@ -39,6 +39,10 @@ function editarCampo($conn, $id_user, $campo, $valor) {
         $stmt = $conn->prepare($sql);
         $v = (int)$valor;
         $stmt->bind_param("ii", $v, $id_user);
+    } elseif (in_array($campo, ['nome']) || in_array($campo, ['nome_usuario'])) {
+        $stmt = $conn->prepare("update usuario set nome_usuario = ? where id_user = ?");
+        $v = (string)$valor;
+        $stmt->bind_param("si", $v, $id_user);
     } else {
         $sql = "update usuario set $campo = ? where id_user = ?";
         $stmt = $conn->prepare($sql);

@@ -15,6 +15,7 @@ session_start();
     <ul>
         <li><a href="menu.php">Menu</a></li>
         <li><a href="sala_responsavel.php">Salas</a></li>
+        <li><a href="logout.php">logout</a></li>
     </ul>
     <ul id="listaResposta"></ul>
     <script src="../js/script.js">

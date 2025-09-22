@@ -18,7 +18,7 @@ session_start();
             <li><a href="usuarios.php">Usuarios</a></li>
             <li><a href="salas.php">Salas</a></li>
             <li><a href="alunos.php">Alunos</a></li>
-            <li><a href="login.php">sair</a></li>
+            <li><a href="logout.php">logout</a></li>
         </ul>
     <?php elseif ((int) $_SESSION['nivel'] == 2):?>
         <ul>

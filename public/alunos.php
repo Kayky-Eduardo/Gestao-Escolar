@@ -18,6 +18,7 @@ include("../conexao/conexao.php");
         <li><a href="usuarios.php">Usuarios</a></li>
         <li><a href="salas.php">Salas</a></li>
         <li><a href="alunos.php">Alunos</a></li>
+        <li><a href="logout.php">logout</a></li>
     </ul>
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
         <input type="submit" id="cadastro_alunos" name="cadastro_alunos" value="Cadastrar alunos">
