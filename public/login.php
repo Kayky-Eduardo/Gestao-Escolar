@@ -23,15 +23,13 @@ include("../conexao/conexao.php");
 </html>
 <?php
 if (isset($_POST['email'], $_POST['senha'])) {
-
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-    // $stmt = $conn->prepare("SELECT * from usuario where email = ? and senha = ?");
     $stmt = $conn->prepare("
-    select usuario.*, cargo.nome, cargo.nivel as nivel
-    from usuario
-    join cargo on usuario.id_cargo = cargo.id_cargo
-    where usuario.email = ? and usuario.senha = ?
+        select usuario.*, cargo.nome, cargo.nivel as nivel
+        from usuario
+        join cargo on usuario.id_cargo = cargo.id_cargo
+        where usuario.email = ? and usuario.senha = ?
     ");
     $stmt->bind_param("ss", $email, $senha);
     $stmt->execute() or die("SQL code execution failed: " . $stmt->error);

@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -12,17 +11,21 @@ session_start();
 
 </head>
 <body>
-    <?php if ((int) $_SESSION['nivel'] >= 4):?>
-        <input type="submit" id="cadastro_profissionais" name="cadastro_profissionais" value="Cadastrar profissionais">
-        <input type="submit" id="cadastro_sala" name="cadastro_sala" value="Cadastrar salas">
-        <input type="submit" id="cadastro_alunos" name="cadastro_alunos" value="Cadastrar alunos">
-        <input type="submit" id="sala_geral" name="sala_geral" value="Ver salas">
-    <?php elseif ((int) $_SESSION['nivel'] >= 3):?>
-        <input type="submit" id="sala_geral" name="sala_geral" value="Ver salas">
+    <h1>Menu</h1>
+    <?php if ((int) $_SESSION['nivel'] >= 3):?>
+        <ul>
+            <li><a href="menu.php">Menu</a></li>
+            <li><a href="usuarios.php">Usuarios</a></li>
+            <li><a href="salas.php">Salas</a></li>
+            <li><a href="alunos.php">Alunos</a></li>
+        </ul>
     <?php elseif ((int) $_SESSION['nivel'] == 2):?>
-        <input type="submit" id="sala_responsavel" name="sala_responsavel" value="Ver salas que está responsável">
+        <ul>
+            <li><a href="menu.php">Menu</a></li>
+            <li><a href="sala_responsavel.php">Salas</a></li>
+        </ul>
     <?php endif; ?>
-    <ul id="listaTarefas"></ul>
+    <ul id="listaResposta"></ul>
     <script src="../js/script.js">
 
     </script>
