@@ -29,13 +29,13 @@ function editarCampo($conn, $matricula, $campo, $valor) {
         return false;
     }
 
-    if (in_array($campo, ['id_sala', 'conta_ativa'], true)) {
-        $sql = "UPDATE aluno SET $campo = ? WHERE matricula = ?";
+    if (in_array($campo, ['id_sala'], true)) {
+        $sql = "update aluno set $campo = ? where matricula = ?";
         $stmt = $conn->prepare($sql);
         $v = (int)$valor;
-        $stmt->bind_param("ii", $v, $matricula);
+        $stmt->bind_param("i", $v, $matricula);
     } else {
-        $sql = "UPDATE aluno SET $campo = ? WHERE matricula = ?";
+        $sql = "update aluno set $campo = ? where matricula = ?";
         $stmt = $conn->prepare($sql);
         $v = (string)$valor;
         $stmt->bind_param("si", $v, $matricula);

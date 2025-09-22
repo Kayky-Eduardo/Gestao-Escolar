@@ -19,7 +19,7 @@ session_start();
         <li><a href="alunos.php">Alunos</a></li>
     </ul>
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
-        <input type="submit" id="cadastro_profissionais" name="cadastro_profissionais" value="Cadastrar usuário">
+        <input type="submit" id="cadastro_usuario" name="cadastro_profissionais" value="Cadastrar usuário">
     <?php endif; ?>
     <ul id="listaResposta"></ul>
     <script src="../front/usuarios.js">

@@ -26,7 +26,7 @@ if (isset($_POST['email'], $_POST['senha'])) {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
     $stmt = $conn->prepare("
-        select usuario.*, cargo.nome, cargo.nivel as nivel
+        select usuario.*, cargo.nome_cargo, cargo.nivel as nivel
         from usuario
         join cargo on usuario.id_cargo = cargo.id_cargo
         where usuario.email = ? and usuario.senha = ?

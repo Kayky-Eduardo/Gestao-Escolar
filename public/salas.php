@@ -22,7 +22,7 @@ session_start();
         <input type="submit" id="cadastro_sala" name="cadastro_sala" value="Cadastrar salas">
     <?php endif; ?>
     <ul id="listaResposta"></ul>
-    <script src="../js/script.js">
+    <script src="../front/sala.js">
 
     </script>
 </body>

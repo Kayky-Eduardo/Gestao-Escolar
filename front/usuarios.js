@@ -1,23 +1,21 @@
 const lista = document.getElementById("listaResposta");
 
-async function carregarAlunos() {
+async function carregarUsuarios() {
     const resposta = await fetch("../api/func_usuarios.php");
-    const Alunos = await resposta.json();
+    const Usuarios = await resposta.json();
 
     lista.innerHTML = "";
 
-    Alunos.forEach(a => {
+    Usuarios.forEach(u => {
         const li = document.createElement("li");
         li.innerHTML =`
-        <strong>matrícula:</strong> ${a.matricula} |
-        <strong>nome:</strong> ${a.nome} |
-        <strong>genero: </strong>${a.genero} |
-        <strong>data de nascimento: </strong>${a.data_nascimento} |
-        <strong>Sala ID: </strong>${a.id_sala}
+        <strong>ID:</strong> ${u.id_user} |
+        <strong>nome:</strong> ${u.nome_usuario} |
+        <strong>email: </strong>${u.email} |
+        <strong>cargo: </strong>${u.nome_cargo} |
+        <strong>nivel: </strong>${u.id_cargo}
         `;
-        if (a.conta_ativa == 0) {
-            li.style.textDecoration = "line-through";
-        }
+
         // excluir
         btnExcluir = document.createElement("button");
         btnExcluir.textContent = "Excluir";
@@ -25,9 +23,9 @@ async function carregarAlunos() {
             await fetch("../api/func_usuarios.php?acao=excluir", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ matricula: a.matricula })
+                body: JSON.stringify({ id_user: u.id_user })
             });
-            carregarAlunos();
+            carregarUsuarios();
         }
 
         // editar
@@ -40,38 +38,38 @@ async function carregarAlunos() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                matricula: a.matricula,
+                id_user: u.id_user,
                 campo: campo,
                 valor: valor
             })
         });
-        carregarAlunos();
+        carregarUsuarios();
         }
         
-        li.append("| ", btnEditar, " | ", btnExcluir)
+        li.append("| ", btnExcluir, " | ", btnEditar)
         lista.appendChild(li);
 
         
     });
 }
 
-carregarAlunos()
+carregarUsuarios()
 
-document.getElementById("cadastro_alunos").addEventListener("click", async  () => {
-        let nome = prompt("Nome do aluno: ").trim().toLowerCase();
-        let genero = prompt(`Genero do aluno ${nome}: `).trim().toLowerCase();
-        let data_nascimento = prompt("Data de nascimento(ex: aaaa-mm-dd): ").trim();
-        let id_sala = prompt("ID da sala: ").trim();
+document.getElementById("cadastro_usuario").addEventListener("click", async  () => {
+        let nome = prompt("Nome: ").trim().toLowerCase();
+        let email = prompt(`Email: `).trim().toLowerCase();
+        let senha = prompt("senha: ").trim();
+        let id_cargo = prompt("ID do cargo: ").trim();
         await fetch("../api/func_usuarios.php?acao=adicionar", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 nome: nome,
-                genero: genero,
-                data_nascimento: data_nascimento,
-                id_sala: id_sala
+                email: email,
+                senha: senha,
+                id_cargo: id_cargo
             })
         });
-        carregarAlunos()
+        carregarUsuarios()
 
 })

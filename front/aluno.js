@@ -15,9 +15,7 @@ async function carregarAlunos() {
         <strong>data de nascimento: </strong>${a.data_nascimento} |
         <strong>Sala ID: </strong>${a.id_sala}
         `;
-        if (a.conta_ativa == 0) {
-            li.style.textDecoration = "line-through";
-        }
+
         // excluir
         btnExcluir = document.createElement("button");
         btnExcluir.textContent = "Excluir";

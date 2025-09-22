@@ -11,12 +11,11 @@ session_start();
 
 </head>
 <body>
-    <h1>Sala que você está responsável</h1>
+    <h1>Salas</h1>
     <ul>
         <li><a href="menu.php">Menu</a></li>
         <li><a href="sala_responsavel.php">Salas</a></li>
     </ul>
-    <input type="submit" id="sala_responsavel" name="sala_responsavel" value="Ver salas que está responsável">
     <ul id="listaResposta"></ul>
     <script src="../js/script.js">
 
