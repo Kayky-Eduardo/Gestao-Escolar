@@ -22,7 +22,7 @@ session_start();
         <input type="submit" id="cadastro_profissionais" name="cadastro_profissionais" value="Cadastrar usuário">
     <?php endif; ?>
     <ul id="listaResposta"></ul>
-    <script src="../front/script.js">
+    <script src="../front/usuarios.js">
     </script>
 </body>
 </html>

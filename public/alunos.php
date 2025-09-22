@@ -23,6 +23,6 @@ include("../conexao/conexao.php");
         <input type="submit" id="cadastro_alunos" name="cadastro_alunos" value="Cadastrar alunos">
     <?php endif; ?>
     <ul id="listaResposta"></ul>
-    <script src="../front/modulos/aluno.js"></script>
+    <script src="../front/aluno.js"></script>
 </body>
 </html>
