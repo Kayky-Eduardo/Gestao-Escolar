@@ -19,8 +19,28 @@ session_start();
         <li><a href="alunos.php">Alunos</a></li>
         <li><a href="logout.php">logout</a></li>
     </ul>
+
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
-        <input type="submit" id="cadastro_usuario" name="cadastro_profissionais" value="Cadastrar usuário">
+        <div>
+            <button onclick="openModal()">Cadastrar usuario</button>
+            <dialog id="dialog">
+                <h3>Cadastro</h3>
+                
+                <label>Nome:</label>
+                <input type="text" id="nome"><br><br>
+                
+                <label>Email:</label>
+                <input type="text" id="email"><br><br>
+                
+                <label>Senha:</label>
+                <input type="text" id="senha"><br><br>
+                
+                <label>ID cargo:</label>
+                <input type="text" id="id_cargo"><br><br>
+                <button id="enviar" onclick="closeModal()">Enviar</button>
+                <button id="enviar" onclick="closeModal()">Fechar</button>
+            </dialog>
+        </div>
     <?php endif; ?>
     <!-- <ul id="listaResposta"></ul> Transformar em tabela  -->
     <table>
@@ -33,7 +53,7 @@ session_start();
                 <th>Nivel</th>
             </tr>
         </thead>
-        <tbody id="listaResposta">
+        <tbody id="Resposta">
         </tbody>
     </table>
     <script src="../front/usuarios.js">

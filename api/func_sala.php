@@ -2,6 +2,21 @@
 header("Content-Type: application/json");
 include("../conexao/conexao.php");
 
+
+// todos os alunos da sala
+
+// SELECT a.matricula, a.nome
+// FROM aluno a
+// WHERE a.id_sala = 1;
+
+// Todas disciplinas em uma sala
+
+// SELECT d.id_disciplina, d.nome AS disciplina
+// FROM sala_disciplina sd
+// JOIN disciplina d ON d.id_disciplina = sd.id_disciplina
+// WHERE sd.id_sala = 1;
+
+
 function listarSalas($conn) {
     $stmt = $conn->prepare("
         select sala.*, usuario.nome_usuario
