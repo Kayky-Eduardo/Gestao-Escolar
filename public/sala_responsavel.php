@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (!$_SESSION['nivel']) {
+    header("Location: logout.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

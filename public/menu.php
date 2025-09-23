@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (!$_SESSION['nivel']) {
+    header("Location: logout.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -11,10 +14,10 @@ session_start();
 
 </head>
 <body>
-    <h1>Menu</h1>
+    <h1>Home</h1>
     <?php if ((int) $_SESSION['nivel'] >= 3):?>
         <ul>
-            <li><a href="menu.php">Menu</a></li>
+            <li><a href="menu.php">Home</a></li>
             <li><a href="usuarios.php">Usuarios</a></li>
             <li><a href="salas.php">Salas</a></li>
             <li><a href="alunos.php">Alunos</a></li>
@@ -22,13 +25,9 @@ session_start();
         </ul>
     <?php elseif ((int) $_SESSION['nivel'] == 2):?>
         <ul>
-            <li><a href="menu.php">Menu</a></li>
+            <li><a href="menu.php">Home</a></li>
             <li><a href="sala_responsavel.php">Salas</a></li>
         </ul>
     <?php endif; ?>
-    <ul id="listaResposta"></ul>
-    <script src="../js/script.js">
-
-    </script>
 </body>
 </html>

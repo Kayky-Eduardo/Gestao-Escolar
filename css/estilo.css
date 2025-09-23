@@ -19,15 +19,3 @@ body {
     font-family: Arial, sans-serif;
     margin: 40px;
 }
-
-input[type="text"], input[type="number"] {
-    padding: 8px;
-    margin: 5px 0;
-    width: 100%;
-    max-width: 300px;
-}
-
-input[type="submit"] {
-    padding: 10px 20px;
-    margin-top: 15px;
-}

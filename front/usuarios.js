@@ -1,16 +1,18 @@
 const tabela = document.getElementById("Resposta");
-const modal = document.getElementById("dialog")
+const modalAdd = document.getElementById("dialog-adicionar")
+const modalEditar = document.getElementById("dialog-editar")
 
-function openModal() {
+function openModal(modal) {
     modal.showModal();
 }
 
-function closeModal() {
+function closeModal(modal) {
     modal.close();
 }
 
 function limparModal() {
-    modal.querySelectorAll("input").forEach(input => input.value = "");
+    modalAdd.querySelectorAll("input").forEach(input => input.value = "");
+    modalEditar.querySelectorAll("input").forEach(input => input.value = "");
 }
 
 
@@ -46,28 +48,39 @@ async function carregarUsuarios() {
         btnEditar = document.createElement("button");
         btnEditar.textContent = "Editar";
         btnEditar.onclick = async () => {
-            let campo = prompt("O que deseja editar: ").trim().toLowerCase();
-            let valor = prompt(`Novo ${campo}: `).trim().toLowerCase();
-            await fetch("../api/func_usuarios.php?acao=editar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                id_user: u.id_user,
-                campo: campo,
-                valor: valor
+            openModal(modalEditar);
+            document.getElementById("salvar").addEventListener("click", async () => {
+                const campo = document.getElementById("campo").value.trim().toLowerCase();
+                const valor = document.getElementById("novo-valor").value.trim().toLowerCase();
+
+                if (!campo || !valor) {
+                    alert("Preencha todos os campos!");
+                    return;
+                }
+
+                await fetch("../api/func_usuarios.php?acao=editar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        id_user: u.id_user,
+                        campo: campo,
+                        valor: valor
+                        })
+                });
+
+                closeModal(modalEditar);
+                limparModal();
+                carregarUsuarios();
             })
-        });
         carregarUsuarios();
         }
         
         tr.append("  ", btnExcluir, "   ", btnEditar)
         tabela.appendChild(tr);
-
-        
     });
+
 }
 
-carregarUsuarios()
 document.getElementById("enviar").addEventListener("click", async () => {
     const nome = document.getElementById("nome").value.trim().toLowerCase();
     const email = document.getElementById("email").value.trim().toLowerCase();
@@ -82,58 +95,15 @@ document.getElementById("enviar").addEventListener("click", async () => {
     await fetch("../api/func_usuarios.php?acao=adicionar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, email, senha, id_cargo })
+        body: JSON.stringify({ 
+            nome: nome,
+            email: email,
+            senha: senha,
+            id_cargo: id_cargo })
     });
 
-    closeModal();
+    closeModal(modalAdd);
     limparModal();
     carregarUsuarios();
 })
-
-function abrirModalEditar(u) {
-    openModal();
-    document.getElementById("nome").value = u.nome_usuario;
-    document.getElementById("email").value = u.email;
-    document.getElementById("senha").value = ""; // senha normalmente não é retornada
-    document.getElementById("id_cargo").value = u.id_cargo;
-
-    btnEnviar.onclick = async () => {
-        const nome = document.getElementById("nome").value.trim().toLowerCase();
-        const email = document.getElementById("email").value.trim().toLowerCase();
-        const senha = document.getElementById("senha").value.trim();
-        const id_cargo = document.getElementById("id_cargo").value.trim();
-
-        if (!nome || !email || !id_cargo) {
-            alert("Preencha os campos obrigatórios!");
-            return;
-        }
-
-        await fetch("../api/func_usuarios.php?acao=editar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id_user: u.id_user, nome, email, senha, id_cargo })
-        });
-
-        closeModal();
-        limparModal();
-        carregarUsuarios();
-    };
-}
-// document.getElementById("cadastro_usuario").addEventListener("click", async  () => {
-//         let nome = prompt("Nome: ").trim().toLowerCase();
-//         let email = prompt(`Email: `).trim().toLowerCase();
-//         let senha = prompt("senha: ").trim();
-//         let id_cargo = prompt("ID do cargo: ").trim();
-//         await fetch("../api/func_usuarios.php?acao=adicionar", {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({
-//                 nome: nome,
-//                 email: email,
-//                 senha: senha,
-//                 id_cargo: id_cargo
-//             })
-//         });
-//         carregarUsuarios()
-
-// })
+carregarUsuarios()

@@ -1,19 +1,34 @@
-const lista = document.getElementById("listaResposta");
+const tabela = document.getElementById("Resposta");
+const modalAdd = document.getElementById("dialog-adicionar")
+const modalEditar = document.getElementById("dialog-editar")
+
+function openModal(modal) {
+    modal.showModal();
+}
+
+function closeModal(modal) {
+    modal.close();
+}
+carregarAlunos()
+function limparModal() {
+    modalAdd.querySelectorAll("input").forEach(input => input.value = "");
+    modalEditar.querySelectorAll("input").forEach(input => input.value = "");
+}
 
 async function carregarAlunos() {
     const resposta = await fetch("../api/func_alunos.php");
     const Alunos = await resposta.json();
 
-    lista.innerHTML = "";
+    tabela.innerHTML = "";
 
     Alunos.forEach(a => {
-        const li = document.createElement("li");
-        li.innerHTML =`
-        <strong>matrícula:</strong> ${a.matricula} |
-        <strong>nome:</strong> ${a.nome} |
-        <strong>genero: </strong>${a.genero} |
-        <strong>data de nascimento: </strong>${a.data_nascimento} |
-        <strong>Sala ID: </strong>${a.id_sala}
+        const tr = document.createElement("tr");
+        tr.innerHTML =`
+        <td>${a.matricula}</td>
+        <td>${a.nome}</td>
+        <td>${a.genero}</td>
+        <td>${a.data_nascimento}</td>
+        <td>${a.id_sala}</td>
         `;
 
         // excluir
@@ -32,44 +47,73 @@ async function carregarAlunos() {
         btnEditar = document.createElement("button");
         btnEditar.textContent = "Editar";
         btnEditar.onclick = async () => {
-            let campo = prompt("O que deseja editar: ").trim().toLowerCase();
-            let valor = prompt(`Novo ${campo}: `).trim().toLowerCase();
-            await fetch("../api/func_alunos.php?acao=editar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                matricula: a.matricula,
-                campo: campo,
-                valor: valor
+            openModal(modalEditar);
+            document.getElementById("salvar").addEventListener("click", async () => {
+                const campo = document.getElementById("campo").value.trim().toLowerCase();
+                const valor = document.getElementById("novo-valor").value.trim().toLowerCase();
+
+                if (!campo || !valor) {
+                    alert("Preencha todos os campos!");
+                    return;
+                }
+
+                await fetch("../api/func_alunos.php?acao=editar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        matricula: a.matricula,
+                        campo: campo,
+                        valor: valor
+                        })
+                });
+
+                closeModal(modalEditar);
+                limparModal();
+                carregarAlunos();
             })
-        });
+            // let campo = prompt("O que deseja editar: ").trim().toLowerCase();
+            // let valor = prompt(`Novo ${campo}: `).trim().toLowerCase();
+        //     await fetch("../api/func_alunos.php?acao=editar", {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     // body: JSON.stringify({
+        //     //     id_user: u.id_user,
+        //     //     campo: campo,
+        //     //     valor: valor
+        //     // })
+        // });
         carregarAlunos();
         }
         
-        li.append("| ", btnEditar, " | ", btnExcluir)
-        lista.appendChild(li);
+        tr.append("| ", btnEditar, " | ", btnExcluir)
+        tabela.appendChild(tr);
 
-        
-    });
+        });
 }
 
-carregarAlunos()
+document.getElementById("enviar").addEventListener("click", async () => {
+    const nome = document.getElementById("nome").value.trim().toLowerCase();
+    const genero = document.getElementById("genero").value.trim().toLowerCase();
+    const data_nascimento = document.getElementById("data_nascimento").value.trim();
+    const id_sala = document.getElementById("id_sala").value.trim();
 
-document.getElementById("cadastro_alunos").addEventListener("click", async  () => {
-        let nome = prompt("Nome do aluno: ").trim().toLowerCase();
-        let genero = prompt(`Genero do aluno ${nome}: `).trim().toLowerCase();
-        let data_nascimento = prompt("Data de nascimento(ex: aaaa-mm-dd): ").trim();
-        let id_sala = prompt("ID da sala: ").trim();
-        await fetch("../api/func_alunos.php?acao=adicionar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                nome: nome,
-                genero: genero,
-                data_nascimento: data_nascimento,
-                id_sala: id_sala
-            })
-        });
-        carregarAlunos()
+    if (!nome || !genero || !data_nascimento || !id_sala) {
+        alert("Preencha todos os campos!");
+        return;
+    }
 
+    await fetch("../api/func_alunos.php?acao=adicionar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            nome: nome,
+            genero: genero,
+            data_nascimento: data_nascimento,
+            id_sala: id_sala })
+    });
+
+    closeModal(modalAdd);
+    limparModal();
+    carregarAlunos();
 })
+carregarAlunos()
