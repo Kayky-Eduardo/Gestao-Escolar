@@ -15,13 +15,16 @@ if (!$_SESSION['nivel']) {
 </head>
 <body>
     <h1>Salas</h1>
-    <ul>
-        <li><a href="menu.php">Home</a></li>
-        <li><a href="usuarios.php">Usuarios</a></li>
-        <li><a href="salas.php">Salas</a></li>
-        <li><a href="alunos.php">Alunos</a></li>
-        <li><a href="logout.php">logout</a></li>
-    </ul>
+    <nav>
+        <ul>
+            <li><a href="menu.php">Home</a></li>
+            <li><a href="usuarios.php">Usuarios</a></li>
+            <li><a href="salas.php">Salas</a></li>
+            <li><a href="alunos.php">Alunos</a></li>
+            <li><a href="sala_responsavel.php">Detalhes salas</a></li>
+            <li><a href="logout.php">logout</a></li>
+        </ul>
+    </nav>
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
         <div>
             <button onclick="openModal(modalAdd)">Cadastrar Sala</button>
@@ -62,6 +65,7 @@ if (!$_SESSION['nivel']) {
                 <th>Nome</th>
                 <th>capacidade</th>
                 <th>Data de Criação</th>
+                <th>ID responsavel</th>
                 <th>responsável</th>
             </tr>
         </thead>

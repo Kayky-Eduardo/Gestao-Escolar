@@ -29,13 +29,13 @@ function adicionarUsuario($conn, $nome, $email, $senha, $id_cargo) {
 
 function editarCampo($conn, $id_user, $campo, $valor) {
     // permitir apenas campos seguros
-    $permitidos = ['nome', 'nome_usuario', 'email', 'senha', 'id_cargo'];
+    $permitidos = ['nome', 'nome_usuario', 'email', 'senha', 'id_cargo', 'nivel'];
     if (!in_array($campo, $permitidos)) {
         return false;
     }
 
-    if (in_array($campo, ['id_cargo'])) {
-        $sql = "update usuario set $campo = ? where id_user = ?";
+    if (in_array($campo, ['id_cargo']) || in_array($campo, ['nivel'])) {
+        $sql = "update usuario set id_cargo = ? where id_user = ?";
         $stmt = $conn->prepare($sql);
         $v = (int)$valor;
         $stmt->bind_param("ii", $v, $id_user);
@@ -82,6 +82,3 @@ if ($acao === 'excluir') {
 // padrão: listar
 echo json_encode(listarUsuario($conn));
 ?>
-
-
-

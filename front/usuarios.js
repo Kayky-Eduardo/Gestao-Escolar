@@ -29,7 +29,7 @@ async function carregarUsuarios() {
         <td>${u.nome_usuario}</td>
         <td>${u.email}</td>
         <td>${u.nome_cargo}</td>
-        <td>${u.id_cargo}</td>
+        <td>${u.nivel}</td>
         `;
 
         // excluir

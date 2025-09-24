@@ -28,6 +28,7 @@ async function carregarSalas() {
         <td>${s.nome_sala}</td>
         <td>${s.capacidade}</td>
         <td>${s.data_criacao}</td>
+        <td>${s.id_responsavel}</td>
         <td>${s.nome_usuario}</td>
         `;
                 
@@ -57,7 +58,7 @@ async function carregarSalas() {
                     return;
                 }
 
-                await fetch("../api/func)sala.php?acao=editar", {
+                await fetch("../api/func_sala.php?acao=editar", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ 

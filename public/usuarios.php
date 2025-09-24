@@ -20,9 +20,10 @@ if (!$_SESSION['nivel']) {
         <li><a href="usuarios.php">Usuarios</a></li>
         <li><a href="salas.php">Salas</a></li>
         <li><a href="alunos.php">Alunos</a></li>
+        <li><a href="sala_responsavel.php">Detalhes salas</a></li>
         <li><a href="logout.php">logout</a></li>
     </ul>
-
+    
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
         <div>
             <button onclick="openModal(modalAdd)">Cadastrar usuario</button>

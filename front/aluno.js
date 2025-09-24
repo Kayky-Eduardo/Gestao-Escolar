@@ -71,17 +71,6 @@ async function carregarAlunos() {
                 limparModal();
                 carregarAlunos();
             })
-            // let campo = prompt("O que deseja editar: ").trim().toLowerCase();
-            // let valor = prompt(`Novo ${campo}: `).trim().toLowerCase();
-        //     await fetch("../api/func_alunos.php?acao=editar", {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     // body: JSON.stringify({
-        //     //     id_user: u.id_user,
-        //     //     campo: campo,
-        //     //     valor: valor
-        //     // })
-        // });
         carregarAlunos();
         }
         
