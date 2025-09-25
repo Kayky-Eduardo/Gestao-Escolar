@@ -23,6 +23,7 @@ if (!$_SESSION['nivel']) {
             <li><a href="alunos.php">Alunos</a></li>
             <li><a href="sala_responsavel.php">Detalhes salas</a></li>
             <li><a href="logout.php">logout</a></li>
+            <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
         </ul>
     </nav>
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
@@ -56,7 +57,6 @@ if (!$_SESSION['nivel']) {
                 <button onclick="closeModal(modalEditar)">Fechar</button>
             </dialog>
         </div>
-        <!-- <input type="submit" id="cadastro_sala" name="cadastro_sala" value="Cadastrar salas"> -->
     <?php endif; ?>
     <table>
         <thead>
@@ -67,6 +67,7 @@ if (!$_SESSION['nivel']) {
                 <th>Data de Criação</th>
                 <th>ID responsavel</th>
                 <th>responsável</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody id="Resposta">

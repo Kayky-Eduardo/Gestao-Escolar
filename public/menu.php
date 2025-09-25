@@ -23,7 +23,6 @@ if (!$_SESSION['nivel']) {
             <li><a href="alunos.php">Alunos</a></li>
             <li><a href="sala_responsavel.php">Detalhes salas</a></li>
             <li><a href="logout.php">logout</a></li>
-            <!-- Verificar por que não funciona -->
             <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
         </ul>
     <?php elseif ((int) $_SESSION['nivel'] == 2):?>

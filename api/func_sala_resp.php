@@ -40,7 +40,7 @@ function listarDisciplinaSala($conn, $id_sala) {
         select d.id_disciplina, d.nome as disciplina
         from sala_disciplina sd
         join disciplina d on d.id_disciplina = sd.id_disciplina
-        where sd sd.id_sala = ?;
+        where sd.id_sala = ?;
     ");
     $stmt->bind_param("i", $id_sala);
     $stmt->execute() or die("SQL code execution failed: " . $stmt->error);
@@ -52,15 +52,33 @@ function listarDisciplinaSala($conn, $id_sala) {
     return $salaDisciplinas;
 }
 
+// No seu arquivo func_sala_resp.php, adicione a função
+function listarAlunosNotasDisciplina($conn, $id_sala, $id_disciplina) {
+    // Sua query SQL para buscar:
+    // aluno.nome, aluno.matricula, nota.b1, nota.b2, nota.b3, nota.b4
+    // WHERE aluno.id_sala = ? AND nota.id_disciplina = ?
+    // Retorna o array.
+}
+
+
 $acao = $_GET['acao'] ?? null;
 $input = json_decode(file_get_contents('php://input'), true);
 
-if ($acao == "AlunosSala") {
-    echo json_encode(listarAlunosSala($conn));
+// E adicione a chamada no final
+if ($acao == "alunosNotasDisciplina") {
+    echo json_encode(listarAlunosNotasDisciplina($conn, $input['id_sala'], $input['id_disciplina']));
+    exit;
+}
+if ($acao == "alunoSala") {
+    echo json_encode(listarAlunosSala($conn, $input['id_sala']));
+    exit;
+
 }
 
-if ($acao == "DisciplinaSala") {
-    echo json_encode(listarDisciplinaSala($conn));
+if ($acao == "disciplinaSala") {
+    echo json_encode(listarDisciplinaSala($conn, $input['id_sala']));
+    exit;
+
 }
 
 if ($acao === 'adicionar') {

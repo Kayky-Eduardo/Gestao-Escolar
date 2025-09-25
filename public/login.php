@@ -41,7 +41,7 @@ if (isset($_POST['email'], $_POST['senha'])) {
         }
         $_SESSION['nivel'] = $user['nivel'];
         $_SESSION['usuario'] = $user['id_user'];
-        $_SESSION['nome'] = $user['nome'];
+        $_SESSION['nome'] = $user['nome_usuario'];
         header("Location: menu.php");
     } else {
         Echo "Login failed! Please check if your email or password is correct!";

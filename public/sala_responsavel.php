@@ -24,6 +24,7 @@ if (!$_SESSION['nivel']) {
                 <li><a href="alunos.php">Alunos</a></li>
                 <li><a href="sala_responsavel.php">Detalhes salas</a></li>
                 <li><a href="logout.php">logout</a></li>
+                <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
             </ul>
         </nav>
     <?php endif; ?>
@@ -57,16 +58,20 @@ if (!$_SESSION['nivel']) {
                 <th>Nome</th>
                 <th>capacidade</th>
                 <th>Data de Criação</th>
-                <th>ID responsavel</th>
+                <th>responsavel ID</th>
                 <th>responsável</th>
                 <th>Alunos</th>
-                <th>disciplinas</th>
+                <th>Disciplina</th>
             </tr>
         </thead>
         <tbody id="Resposta">
         </tbody>
-        <script src="../front/sala_responsavel.js">
-
-    </script>
+    </table>
+    <hr>
+    <div id="detalhesContainer">
+        <h2>Detalhes da Sala Selecionada</h2>
+        <p>Selecione 'Ver alunos' ou 'Ver disciplinas' para visualizar.</p>
+    </div>
+    <script src="../front/sala_responsavel.js"></script>
 </body>
 </html>

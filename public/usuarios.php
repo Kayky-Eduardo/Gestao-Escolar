@@ -22,6 +22,7 @@ if (!$_SESSION['nivel']) {
         <li><a href="alunos.php">Alunos</a></li>
         <li><a href="sala_responsavel.php">Detalhes salas</a></li>
         <li><a href="logout.php">logout</a></li>
+        <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
     </ul>
     
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
@@ -67,6 +68,7 @@ if (!$_SESSION['nivel']) {
                 <th>Email</th>
                 <th>Cargo</th>
                 <th>Nivel</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody id="Resposta">

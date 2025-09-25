@@ -74,7 +74,11 @@ async function carregarSalas() {
             })
         carregarSalas();
         }
-        tr.append("| ", btnExcluir, " | ", btnEditar)
+        const tdAcoes = document.createElement("td");
+        tdAcoes.appendChild(btnEditar);
+        tdAcoes.appendChild(document.createTextNode(" "));
+        tdAcoes.appendChild(btnExcluir);
+        tr.appendChild(tdAcoes);
         tabela.appendChild(tr);
 
         

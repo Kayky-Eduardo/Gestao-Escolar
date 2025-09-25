@@ -74,7 +74,11 @@ async function carregarAlunos() {
         carregarAlunos();
         }
         
-        tr.append("| ", btnEditar, " | ", btnExcluir)
+        const tdAcoes = document.createElement("td");
+        tdAcoes.appendChild(btnEditar);
+        tdAcoes.appendChild(document.createTextNode(" "));
+        tdAcoes.appendChild(btnExcluir);
+        tr.appendChild(tdAcoes);
         tabela.appendChild(tr);
 
         });
