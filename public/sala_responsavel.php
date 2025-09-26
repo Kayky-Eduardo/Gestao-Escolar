@@ -31,9 +31,10 @@ if (!$_SESSION['nivel']) {
     <?php if ((int) $_SESSION['nivel'] == 2):?>
         <nav>
             <ul>
-                <li><a href="menu.php">Menu</a></li>
+                <li><a href="menu.php">Home</a></li>
                 <li><a href="sala_responsavel.php">Salas</a></li>
                 <li><a href="logout.php">logout</a></li>
+                <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
             </ul>
         </nav>
         <!-- Verificar a possibilidade de criar inputs em cada nota ao invés do modal -->

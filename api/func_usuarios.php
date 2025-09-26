@@ -93,7 +93,7 @@ function editarCampo($conn, $id_user, $campo, $valor) {
         $stmt->bind_param("ii", $v, $id_user);
         return $stmt->execute();
     }
-    if (in_array($campo, ['nome'])) {
+    if (in_array($campo, ['nome', 'nome_usuario'])) {
         $sql = "UPDATE usuario SET nome_usuario = ? WHERE id_user = ?";
         $stmt = $conn->prepare($sql);
         $v = (string)$valor;
