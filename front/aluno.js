@@ -70,6 +70,7 @@ async function carregarAlunos() {
                 closeModal(modalEditar);
                 limparModal();
                 carregarAlunos();
+                window.location.reload();
             })
         carregarAlunos();
         }

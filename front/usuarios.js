@@ -48,11 +48,16 @@ async function carregarUsuarios() {
         btnEditar = document.createElement("button");
         btnEditar.textContent = "Editar";
         btnEditar.onclick = async () => {
+            let currentUserId = u.id_user; 
             openModal(modalEditar);
             document.getElementById("salvar").addEventListener("click", async () => {
                 const campo = document.getElementById("campo").value.trim().toLowerCase();
                 const valor = document.getElementById("novo-valor").value.trim().toLowerCase();
 
+                    if (currentUserId === null) {
+                        alert("Erro: ID de usuário para edição não encontrado.");
+                        return;
+                    }
                 if (!campo || !valor) {
                     alert("Preencha todos os campos!");
                     return;
@@ -71,6 +76,7 @@ async function carregarUsuarios() {
                 closeModal(modalEditar);
                 limparModal();
                 carregarUsuarios();
+                window.location.reload();
             })
         carregarUsuarios();
         }

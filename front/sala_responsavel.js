@@ -14,7 +14,8 @@ async function mostrarAlunos(id_sala, nome_sala) {
 
     // 2. Construir o HTML para os alunos
     // uso do htmlConteudo para ser mais rápido de fazer a iteração e evitar erros no innerhtml
-    let htmlConteudo = `<h3>Alunos da Sala: ${nome_sala} (ID: ${id_sala})</h3>`;
+    let htmlConteudo = `<h3>${nome_sala}</h3>`;
+    htmlConteudo += "<h4>Alunos:</h4>" 
     if (alunos.length > 0) {
         htmlConteudo += '<ul>';
         alunos.forEach(aluno => {

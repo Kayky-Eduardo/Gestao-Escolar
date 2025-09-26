@@ -34,7 +34,8 @@ if (!$_SESSION['nivel']) {
                 <li><a href="menu.php">Home</a></li>
                 <li><a href="sala_responsavel.php">Salas</a></li>
                 <li><a href="logout.php">logout</a></li>
-                <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
+                <!-- aqui -->
+                <li id="dados-user" data-id-user=<?php $_SESSION['usuario'] ?>>Usuario: <?php echo $_SESSION['nome'] ?></li>
             </ul>
         </nav>
         <!-- Verificar a possibilidade de criar inputs em cada nota ao invés do modal -->

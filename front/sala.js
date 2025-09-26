@@ -71,6 +71,8 @@ async function carregarSalas() {
                 closeModal(modalEditar);
                 limparModal();
                 carregarSalas();
+                window.location.reload();
+
             })
         carregarSalas();
         }
