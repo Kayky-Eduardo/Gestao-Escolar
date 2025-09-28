@@ -81,9 +81,13 @@ async function mostrarDisciplinas(id_sala, nome_sala) {
 
 // --- Função principal de carregamento das salas ---
 
-async function carregarSalas() {
+async function carregarSalas(id_usuario_responsavel) {
     // ... seu código de fetch para listar salas (já está correto) ...
-    const resposta = await fetch("../api/func_sala_resp.php");
+    const resposta = await fetch("../api/func_sala_resp.php?acao=listarSalasResponsavel", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id_responsavel: id_usuario_responsavel })
+    });
     const Salas = await resposta.json();
 
     tabela.innerHTML = "";
@@ -126,4 +130,20 @@ async function carregarSalas() {
     });
 }
 
-carregarSalas();
+function inicializarSalasResponsavel() {
+    const dadosUserElement = document.getElementById("dados-user");
+    
+    if (dadosUserElement) {
+        const idUsuario = dadosUserElement.getAttribute('data-id-user');
+
+        if (idUsuario && idUsuario !== '') {
+            // Chama carregarSalas com o ID do usuário obtido do HTML
+            carregarSalas(idUsuario);
+        } else {
+            console.error("ID do usuário não encontrado. Verifique a sessão PHP.");
+        }
+    } else {
+        console.error("Elemento 'dados-user' não encontrado. Certifique-se de que o PHP injetou o ID.");
+    }
+}
+inicializarSalasResponsavel();

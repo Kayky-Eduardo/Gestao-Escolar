@@ -2,8 +2,6 @@
 header("Content-Type: application/json");
 include("../conexao/conexao.php");
 
-
-
 function listarSalas($conn) {
     $stmt = $conn->prepare("
         select sala.*, usuario.nome_usuario
@@ -25,7 +23,29 @@ function adicionarSala($conn, $nome_sala, $capacidade, $id_responsavel) {
         VALUES (?, ?, ?)
     ");
     $stmt->bind_param("sii", $nome_sala, $capacidade, $id_responsavel);
-    return $stmt->execute();
+    if($stmt->execute()) {
+        $id_sala = $conn->insert_id;        
+        $disciplinas = ['Mat', 'Geo', 'Hist', 'Port'];
+        $id_disciplinas = [];
+        $stmtDisciplina = $conn->prepare("select id_disciplina from disciplina where nome = ?");
+        foreach($disciplinas as $disciplina) {
+            $stmtDisciplina->bind_param("s", $disciplina);
+            $stmtDisciplina->execute();
+            $result = $stmtDisciplina->get_result();
+            if ($row = $result->fetch_assoc()) {
+                $id_disciplinas[] = $row['id_disciplina'];
+            }
+        }
+        $stmtInsert = $conn->prepare("
+        insert into sala_disciplina (id_sala, id_disciplina, id_professor)
+        values (?, ?, ?)
+        ");
+        foreach ($id_disciplinas as $id_disciplina) {
+            $stmtInsert->bind_param("iii", $id_sala, $id_disciplina, $id_responsavel);
+            $stmtInsert->execute();
+        }
+        return true;
+    }
 }
 
 function excluirSala($conn, $id_sala) {

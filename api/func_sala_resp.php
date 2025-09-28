@@ -17,6 +17,22 @@ function listarSalas($conn) {
     return $salas;
 }
 
+function listarSalasResponsavel($conn, $id_user) {
+    $stmt = $conn->prepare("
+    select sala.*, usuario.nome_usuario
+    from sala 
+    join usuario on usuario.id_user = sala.id_responsavel
+    where sala.id_responsavel = ?;
+    ");
+    $stmt->bind_param("i", $id_user);
+    $stmt->execute() or die("SQL code execution failed: " . $stmt->error);
+    $result = $stmt->get_result();
+    $salas = [];
+    while ($row = $result->fetch_assoc()) {
+        $salas[] = $row;
+    }
+    return $salas;
+}
 // listar todos os alunos presente nesta sala
 function listarAlunosSala($conn, $id_sala) {
     $stmt = $conn->prepare("
@@ -69,6 +85,18 @@ if ($acao == "alunosNotasDisciplina") {
     echo json_encode(listarAlunosNotasDisciplina($conn, $input['id_sala'], $input['id_disciplina']));
     exit;
 }
+
+if ($acao == "listarSalasResponsavel") { 
+    if (isset($input['id_responsavel'])) {
+        $id_responsavel = (int)$input['id_responsavel'];
+        echo json_encode(listarSalasResponsavel($conn, $id_responsavel));
+    } else {
+        // Erro se o ID não for enviado no JSON
+        echo json_encode(["erro" => "ID do responsável ausente no corpo da requisição POST."]);
+    }
+    exit;
+}
+
 if ($acao == "alunoSala") {
     echo json_encode(listarAlunosSala($conn, $input['id_sala']));
     exit;
@@ -100,5 +128,5 @@ if ($acao === 'excluir') {
 }
 
 // padrão: listar
-echo json_encode(listarSalas($conn));
+// echo json_encode(listarSalas($conn));
 ?>
