@@ -11,26 +11,32 @@ if (!$_SESSION['nivel']) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" href="../css/estilo.css">
-
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="menu.php">Home</a></li>
+            <li><a href="usuarios.php">Usuarios</a></li>
+            <li><a href="salas.php">Salas</a></li>
+            <li><a href="alunos.php">Alunos</a></li>
+            <li><a href="sala_responsavel.php">Detalhes salas</a></li>
+            <li><a href="logout.php">logout</a></li>
+            <li><?php echo "<a> Usuario: " . $_SESSION['nome'] . "</a>"?></li>
+        </ul>
+    </nav>
     <h1>Usuarios</h1>
-    <ul>
-        <li><a href="menu.php">Home</a></li>
-        <li><a href="usuarios.php">Usuarios</a></li>
-        <li><a href="salas.php">Salas</a></li>
-        <li><a href="alunos.php">Alunos</a></li>
-        <li><a href="sala_responsavel.php">Detalhes salas</a></li>
-        <li><a href="logout.php">logout</a></li>
-        <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
-    </ul>
     
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
         <div>
-            <button onclick="openModal(modalAdd)">Cadastrar usuario</button>
+            <div class="btn-container">
+                <button onclick="openModal(modalAdd)">Cadastrar usuario</button>
+            </div>
             <dialog id="dialog-adicionar">
-                <h3>Cadastro</h3>
+                <h2>Cadastro</h2>
                 
+                <label>ID cargo:</label>
+                <input type="text" id="id_cargo"><br><br>
+
                 <label>Nome:</label>
                 <input type="text" id="nome"><br><br>
                 
@@ -40,14 +46,15 @@ if (!$_SESSION['nivel']) {
                 <label>Senha:</label>
                 <input type="text" id="senha"><br><br>
                 
-                <label>ID cargo:</label>
-                <input type="text" id="id_cargo"><br><br>
+
                 <button id="enviar" onclick="closeModal(modalAdd)">Enviar</button>
                 <button id="enviar" onclick="closeModal(modalAdd)">Fechar</button>
             </dialog>
         </div>
         <div>
-            <dialog id="dialog-editar">                
+            <dialog id="dialog-editar">
+                <h2>Edição</h2>                
+            
                 <label>Campo:</label>
                 <input type="text" id="campo"><br><br>
                 

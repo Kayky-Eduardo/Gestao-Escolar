@@ -14,21 +14,25 @@ if (!$_SESSION['nivel']) {
 
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="menu.php">Home</a></li>
+            <li><a href="usuarios.php">Usuarios</a></li>
+            <li><a href="salas.php">Salas</a></li>
+            <li><a href="alunos.php">Alunos</a></li>
+            <li><a href="sala_responsavel.php">Detalhes salas</a></li>
+            <li><a href="logout.php">logout</a></li>
+            <li><?php echo "<a> Usuario: " . $_SESSION['nome'] . "</a>"?></li>
+        </ul>
+    </nav>
     <h1>Alunos</h1>
-    <ul>
-        <li><a href="menu.php">Home</a></li>
-        <li><a href="usuarios.php">Usuarios</a></li>
-        <li><a href="salas.php">Salas</a></li>
-        <li><a href="alunos.php">Alunos</a></li>
-        <li><a href="sala_responsavel.php">Detalhes salas</a></li>
-        <li><a href="logout.php">logout</a></li>
-        <li>Usuario: <?php echo $_SESSION['nome'] ?></li>
-    </ul>
     <?php if ((int) $_SESSION['nivel'] >= 4):?>
         <div>
-            <button onclick="openModal(modalAdd)">Cadastrar Alunos</button>
+            <div class="btn-container">
+                <button onclick="openModal(modalAdd)">Cadastrar Alunos</button>
+            </div>
             <dialog id="dialog-adicionar">
-                <h3>Cadastro</h3>
+                <h2>Cadastro</h2>
                 <label>ID Sala:</label>
                 <input type="text" id="id_sala"><br><br>
                 
@@ -47,7 +51,9 @@ if (!$_SESSION['nivel']) {
             </dialog>
         </div>
         <div>
-            <dialog id="dialog-editar">                
+            <dialog id="dialog-editar">
+                <h2>Edição</h2>                
+       
                 <label>Campo:</label>
                 <input type="text" id="campo"><br><br>
                 

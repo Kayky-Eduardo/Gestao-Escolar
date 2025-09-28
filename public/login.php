@@ -9,17 +9,20 @@ include("../conexao/conexao.php");
     <title>Login</title>
     <link rel="stylesheet" href="../css/estilo.css">
 </head>
-<body>
-    <form action="" method="POST">
-        <label>E-mail:</label>
-        <input type="text" name="email">
+<body class="login">
+    <div class="container-form">
+        <form action="" method="POST">
+            <h1>Login</h1>
+            <label>E-mail:</label>
+            <input type="text" name="email">
 
-        <label>Password:</label>
-        <input type="password" name="senha">
+            <label>Password:</label>
+            <input type="password" name="senha">
 
-        <button type="submit">Login</button>
-    </form>
-</body>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    </body>
 </html>
 <?php
 if (isset($_POST['email'], $_POST['senha'])) {
@@ -44,7 +47,7 @@ if (isset($_POST['email'], $_POST['senha'])) {
         $_SESSION['nome'] = $user['nome_usuario'];
         header("Location: menu.php");
     } else {
-        Echo "Login failed! Please check if your email or password is correct!";
+        echo "<p class='texto-logar'>Falha ao logar! verifique se o email ou senha estão incorretos</p>";
     }
 }
 ?>

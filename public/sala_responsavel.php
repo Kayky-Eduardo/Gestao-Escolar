@@ -14,8 +14,7 @@ if (!$_SESSION['nivel']) {
 
 </head>
 <body>
-    <h1>Salas</h1>
-    <?php if ((int) $_SESSION['nivel'] >= 4):?>
+    <?php if ((int) $_SESSION['nivel'] >= 3):?>
         <nav>
             <ul>
                 <li><a href="menu.php">Home</a></li>
@@ -24,7 +23,7 @@ if (!$_SESSION['nivel']) {
                 <li><a href="alunos.php">Alunos</a></li>
                 <li><a href="sala_responsavel.php">Detalhes salas</a></li>
                 <li><a href="logout.php">logout</a></li>
-                <li id="dados-user" data-id-user="<?php echo $_SESSION['usuario'] ?>">Usuario: <?php echo $_SESSION['nome'] ?></li>
+                <li id="dados-user" data-id-user="<?php echo $_SESSION['usuario'] ?>"><?php echo "<a> Usuario: " . $_SESSION['nome'] . "</a>" ?></li>
             </ul>
         </nav>
     <?php endif; ?>
@@ -34,10 +33,11 @@ if (!$_SESSION['nivel']) {
                 <li><a href="menu.php">Home</a></li>
                 <li><a href="sala_responsavel.php">Salas</a></li>
                 <li><a href="logout.php">logout</a></li>
-                <li id="dados-user" data-id-user="<?php echo $_SESSION['usuario'] ?>">Usuario: <?php echo $_SESSION['nome'] ?></li>
+                <li id="dados-user" data-id-user="<?php echo $_SESSION['usuario'] ?>"><?php echo "<a> Usuario: " . $_SESSION['nome'] . "</a>" ?></li>
             </ul>
         </nav>
     <?php endif; ?>
+    <h1>Salas</h1>
 
     <table>
         <thead>
@@ -57,8 +57,6 @@ if (!$_SESSION['nivel']) {
     </table>
     <hr>
     <div id="detalhesContainer">
-        <h2>Detalhes da Sala Selecionada</h2>
-        <p>Selecione 'Ver alunos' ou 'Ver disciplinas' para visualizar.</p>
     </div>
     <script src="../front/sala_responsavel.js"></script>
 </body>

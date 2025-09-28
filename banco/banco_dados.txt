@@ -4,6 +4,12 @@ default collate utf8mb4_unicode_ci;
 
 use gestao_escolar_k;
 
+create table cargo (
+    id_cargo int auto_increment primary key,
+    nome_cargo varchar(50) not null unique,
+    nivel int not null
+);
+
 create table usuario (
     id_user int auto_increment primary key,
     nome_usuario varchar(100) not null,
@@ -14,45 +20,13 @@ create table usuario (
     foreign key (id_cargo) references cargo(id_cargo)
 );
 
-alter table cargo
-change nome nome_cargo varchar(50);
-
-create table cargo (
-    id_cargo int auto_increment primary key,
-    nome_cargo varchar(50) not null unique,
-    nivel int not null
-);
-
-select * from sala;
-select usuario.*, cargo.nome, cargo.nivel as nivel
-from usuario
-join cargo on usuario.id_cargo = cargo.id_cargo
-where usuario.email = "professor1@" and usuario.senha = "1234";
-
-insert into usuario (nome, email, senha, id_cargo) values
-("professor1", "professor1@", "1234", 2);
-
-select * from usuario;
-select * from sala;
-select * from cargo;
-
 create table sala (
     id_sala int auto_increment primary key,
     nome_sala varchar(50) not null,
     capacidade int not null,
+    data_criacao datetime default current_timestamp,
     id_responsavel int,
-    foreign key (id_responsavel) references usuario(id_user)
-);
-
-select * from sala;
-
-select * from aluno;
-create table sala_responsavel (
-    id_sala int not null,
-    id_user int not null,
-    primary key (id_sala, id_user),
-    foreign key (id_sala) references sala(id_sala),
-    foreign key (id_user) references usuario(id_user)
+	FOREIGN KEY (id_responsavel) references usuario(id_user)
 );
 
 create table aluno (
@@ -70,32 +44,34 @@ create table disciplina (
     nome varchar(100) not null
 );
 
-select * from aluno;
 create table sala_disciplina (
     id_sala int,
     id_disciplina int,
+	id_professor int,
     primary key (id_sala, id_disciplina),
     foreign key (id_sala) references sala(id_sala),
+	FOREIGN KEY (id_professor) references usuario(id_user),
     foreign key (id_disciplina) references disciplina(id_disciplina)
 );
 
 create table nota (
     id_nota int auto_increment primary key,
     matricula int not null,
+    id_sala int not null,
     id_disciplina int not null,
     bimestre tinyint not null, -- 1 a 4
     valor decimal(5,2) not null,
     data_registro datetime default current_timestamp,
     foreign key (matricula) references aluno(matricula),
-    foreign key (id_disciplina) references disciplina(id_disciplina)
+    foreign key (id_sala, id_disciplina) references sala_disciplina(id_sala, id_disciplina)
 );
 
 create table presenca (
     id_presenca int auto_increment primary key,
     matricula int not null,
-    id_sala int not null,
-    data date not null,
+    data_presenca date not null,
+    id_disciplina int,
     presente tinyint(1) not null,
     foreign key (matricula) references aluno(matricula),
-    foreign key (id_sala) references sala(id_sala)
+	foreign key (id_disciplina) references sala_disciplina(id_disciplina)
 );

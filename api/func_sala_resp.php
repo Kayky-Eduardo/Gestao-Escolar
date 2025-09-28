@@ -37,8 +37,8 @@ function listarSalasResponsavel($conn, $id_user) {
 function listarAlunosSala($conn, $id_sala) {
     $stmt = $conn->prepare("
         SELECT a.matricula, a.nome
-        FROM aluno a
-        WHERE a.id_sala = ?;
+        from aluno a
+        where a.id_sala = ?;
     ");
     $stmt->bind_param("i", $id_sala);
     $stmt->execute() or die("SQL code execution failed: " . $stmt->error);
@@ -70,10 +70,34 @@ function listarDisciplinaSala($conn, $id_sala) {
 
 // No seu arquivo func_sala_resp.php, adicione a função
 function listarAlunosNotasDisciplina($conn, $id_sala, $id_disciplina) {
-    // Sua query SQL para buscar:
-    // aluno.nome, aluno.matricula, nota.b1, nota.b2, nota.b3, nota.b4
-    // WHERE aluno.id_sala = ? AND nota.id_disciplina = ?
-    // Retorna o array.
+    $stmt = $conn->prepare("
+    select 
+        a.matricula,
+        a.nome as nome_aluno,
+        max(case when n.bimestre = 1 then n.valor end) as bimestre_1,
+        max(case when n.bimestre = 2 then n.valor end) as bimestre_2,
+        max(case when n.bimestre = 3 then n.valor end) as bimestre_3,
+        max(case when n.bimestre = 4 then n.valor end) as bimestre_4
+    from 
+        aluno a
+    left join 
+        nota n ON n.matricula = a.matricula AND n.id_disciplina = ?
+    where 
+        a.id_sala = ?
+    group by 
+        a.matricula, a.nome
+    order by 
+        a.nome
+    ");
+    $stmt->bind_param("ii", $id_disciplina, $id_sala);
+    $stmt->execute() or die("Execução do código sql falhou: " . $stmt->error);
+    $result = $stmt->get_result();
+    $alunosNotas = [];
+    while ($row = $result->fetch_assoc()) {
+        $alunosNotas[] = $row;
+    }
+    
+    return $alunosNotas;
 }
 
 

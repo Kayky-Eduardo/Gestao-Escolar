@@ -48,37 +48,35 @@ async function carregarUsuarios() {
         btnEditar = document.createElement("button");
         btnEditar.textContent = "Editar";
         btnEditar.onclick = async () => {
-            let currentUserId = u.id_user; 
             openModal(modalEditar);
-            document.getElementById("salvar").addEventListener("click", async () => {
-                const campo = document.getElementById("campo").value.trim().toLowerCase();
-                const valor = document.getElementById("novo-valor").value.trim().toLowerCase();
+            const btnSalvar = document.getElementById("salvar");
+            if (btnSalvar) {
+                btnSalvar.addEventListener("click", async () => {
+                    const campo = document.getElementById("campo").value.trim().toLowerCase();
+                    const valor = document.getElementById("novo-valor").value.trim().toLowerCase();
 
-                    if (currentUserId === null) {
-                        alert("Erro: ID de usuário para edição não encontrado.");
+                    if (!campo || !valor) {
+                        alert("Preencha todos os campos!");
                         return;
                     }
-                if (!campo || !valor) {
-                    alert("Preencha todos os campos!");
-                    return;
-                }
 
-                await fetch("../api/func_usuarios.php?acao=editar", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
-                        id_user: u.id_user,
-                        campo: campo,
-                        valor: valor
-                        })
-                });
+                    await fetch("../api/func_usuarios.php?acao=editar", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 
+                            id_user: u.id_user,
+                            campo: campo,
+                            valor: valor
+                            })
+                    });
 
-                closeModal(modalEditar);
-                limparModal();
-                carregarUsuarios();
-                window.location.reload();
-            })
-        carregarUsuarios();
+                    closeModal(modalEditar);
+                    limparModal();
+                    carregarUsuarios();
+                    window.location.reload();
+                })
+            }
+            carregarUsuarios();
         }
         const tdAcoes = document.createElement("td");
         tdAcoes.appendChild(btnEditar);
@@ -89,30 +87,33 @@ async function carregarUsuarios() {
     });
 
 }
+const btnEnviar = document.getElementById("enviar");
+if (btnEnviar) {
+    btnEnviar.addEventListener("click", async () => {
+        const nome = document.getElementById("nome").value.trim().toLowerCase();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const senha = document.getElementById("senha").value.trim();
+        const id_cargo = document.getElementById("id_cargo").value.trim();
 
-document.getElementById("enviar").addEventListener("click", async () => {
-    const nome = document.getElementById("nome").value.trim().toLowerCase();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const senha = document.getElementById("senha").value.trim();
-    const id_cargo = document.getElementById("id_cargo").value.trim();
+        if (!nome || !email || !senha || !id_cargo) {
+            alert("Preencha todos os campos!");
+            return;
+        }
 
-    if (!nome || !email || !senha || !id_cargo) {
-        alert("Preencha todos os campos!");
-        return;
-    }
-
-    await fetch("../api/func_usuarios.php?acao=adicionar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            nome: nome,
-            email: email,
-            senha: senha,
-            id_cargo: id_cargo })
-    });
+        await fetch("../api/func_usuarios.php?acao=adicionar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                nome: nome,
+                email: email,
+                senha: senha,
+                id_cargo: id_cargo })
+        });
 
     closeModal(modalAdd);
     limparModal();
     carregarUsuarios();
 })
+
+}
 carregarUsuarios()

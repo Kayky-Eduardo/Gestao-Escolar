@@ -49,32 +49,35 @@ async function carregarSalas() {
         btnEditar.textContent = "Editar";
         btnEditar.onclick = async () => {
             openModal(modalEditar);
-            document.getElementById("salvar").addEventListener("click", async () => {
-                const campo = document.getElementById("campo").value.trim().toLowerCase();
-                const valor = document.getElementById("novo-valor").value.trim().toLowerCase();
+            btnSalvar = document.getElementById("salvar");
+            if (btnSalvar) {
+                btnSalvar.addEventListener("click", async () => {
+                    const campo = document.getElementById("campo").value.trim().toLowerCase();
+                    const valor = document.getElementById("novo-valor").value.trim().toLowerCase();
 
-                if (!campo || !valor) {
-                    alert("Preencha todos os campos!");
-                    return;
-                }
+                    if (!campo || !valor) {
+                        alert("Preencha todos os campos!");
+                        return;
+                    }
 
-                await fetch("../api/func_sala.php?acao=editar", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
-                        id_sala: s.id_sala,
-                        campo: campo,
-                        valor: valor
-                        })
-                });
+                    await fetch("../api/func_sala.php?acao=editar", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 
+                            id_sala: s.id_sala,
+                            campo: campo,
+                            valor: valor
+                            })
+                    });
 
-                closeModal(modalEditar);
-                limparModal();
-                carregarSalas();
-                window.location.reload();
-
-            })
-        carregarSalas();
+                    closeModal(modalEditar);
+                    limparModal();
+                    carregarSalas();
+                    window.location.reload();
+                })
+            carregarSalas();
+            }
+            
         }
         const tdAcoes = document.createElement("td");
         tdAcoes.appendChild(btnEditar);
@@ -87,28 +90,30 @@ async function carregarSalas() {
     });
 }
 
-document.getElementById("enviar").addEventListener("click", async () => {
-    const nome_sala = document.getElementById("nome_sala").value.trim().toLowerCase();
-    const capacidade = document.getElementById("capacidade").value.trim().toLowerCase();
-    const id_responsavel = document.getElementById("id_responsavel").value.trim();
+const btnEnviar = document.getElementById("enviar")
+if (btnEnviar) {
+    btnEnviar.addEventListener("click", async () => {
+        const nome_sala = document.getElementById("nome_sala").value.trim().toLowerCase();
+        const capacidade = document.getElementById("capacidade").value.trim().toLowerCase();
+        const id_responsavel = document.getElementById("id_responsavel").value.trim();
 
-    if (!nome_sala || !capacidade || !id_responsavel) {
-        alert("Preencha todos os campos!");
-        return;
-    }
-    await fetch("../api/func_sala.php?acao=adicionar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            nome_sala: nome_sala,
-            capacidade: capacidade,
-            id_responsavel: id_responsavel
-        })
-    });
+        if (!nome_sala || !capacidade || !id_responsavel) {
+            alert("Preencha todos os campos!");
+            return;
+        }
+        await fetch("../api/func_sala.php?acao=adicionar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                nome_sala: nome_sala,
+                capacidade: capacidade,
+                id_responsavel: id_responsavel
+            })
+        });
 
-    closeModal(modalAdd);
-    limparModal();
-    carregarSalas();
-})
-
+        closeModal(modalAdd);
+        limparModal();
+        carregarSalas();
+    })
+}
 carregarSalas()
