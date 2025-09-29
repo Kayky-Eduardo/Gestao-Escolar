@@ -96,9 +96,25 @@ function listarAlunosNotasDisciplina($conn, $id_sala, $id_disciplina) {
     while ($row = $result->fetch_assoc()) {
         $alunosNotas[] = $row;
     }
-    
     return $alunosNotas;
 }
+
+// function adicionarNota($conn, $matricula, $id_sala, $id_disciplina, $lista_valores) {
+//     $bimestres = [1, 2, 3, 4];
+//     $valores = $lista_valores;
+//     for($i=0; $i<4; $i++) {
+//         $stmt = $conn->prepare("
+//         insert into nota (matricula, id_sala, id_disciplina, bimestre, valor)
+//         values (?, ?, ?, ?, ?);
+//         ");
+//         $stmt->bind_param("iiiid", $matricula, $id_sala, $id_disciplina, $bimestres[$i], $valores[$i]);
+//         if(!$stmt->execute()){
+//             echo "Execução do código sql falhou";
+//             return false;
+//         }
+//     }
+//     return true;
+// }
 
 
 $acao = $_GET['acao'] ?? null;
@@ -109,6 +125,11 @@ if ($acao == "alunosNotasDisciplina") {
     echo json_encode(listarAlunosNotasDisciplina($conn, $input['id_sala'], $input['id_disciplina']));
     exit;
 }
+
+// if($acao == "salvarNotas") {
+//     echo json_encode(adicionarNota($conn, $input['matricula'], $input['id_sala'], $input['id_disciplina'], $input['valor']));
+// }
+
 
 if ($acao == "listarSalasResponsavel") { 
     if (isset($input['id_responsavel'])) {

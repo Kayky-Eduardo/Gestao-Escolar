@@ -25,7 +25,7 @@ function adicionarSala($conn, $nome_sala, $capacidade, $id_responsavel) {
     $stmt->bind_param("sii", $nome_sala, $capacidade, $id_responsavel);
     if($stmt->execute()) {
         $id_sala = $conn->insert_id;        
-        $disciplinas = ['Mat', 'Geo', 'Hist', 'Port'];
+        $disciplinas = ['Matematica', 'Geografia', 'Historia', 'Portugues'];
         $id_disciplinas = [];
         $stmtDisciplina = $conn->prepare("select id_disciplina from disciplina where nome = ?");
         foreach($disciplinas as $disciplina) {

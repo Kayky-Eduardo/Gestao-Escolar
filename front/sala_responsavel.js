@@ -57,11 +57,11 @@ async function verAlunosNotas(id_sala, id_disciplina) {
     });
     const dados = await resposta.json();
 
-    // 2. Construir o HTML para os alunos e notas
     let htmlConteudo = '';
     
     if (dados && dados.length > 0) {
         htmlConteudo += `
+        <button id="salvar-notas" class="salvar-notas">Salvar alterações</button>
             <table class="tabela-notas">
                 <thead>
                     <tr>
@@ -77,20 +77,14 @@ async function verAlunosNotas(id_sala, id_disciplina) {
         `;
 
         dados.forEach(aluno => {
-            // Usa ?? '—' para exibir um traço se a nota for NULL (ainda não lançada)
-            const b1 = aluno.bimestre_1 ?? '—'; 
-            const b2 = aluno.bimestre_2 ?? '—';
-            const b3 = aluno.bimestre_3 ?? '—';
-            const b4 = aluno.bimestre_4 ?? '—';
-
             htmlConteudo += `
                 <tr>
                     <td>${aluno.matricula}</td>
                     <td>${aluno.nome_aluno}</td>
-                    <td>${b1}</td>
-                    <td>${b2}</td>
-                    <td>${b3}</td>
-                    <td>${b4}</td>
+                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_1 ?? ''}"></td>
+                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_2 ?? ''}"></td>
+                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_3 ?? ''}"></td>
+                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_4 ?? ''}"></td>
                 </tr>
             `;
         });
@@ -101,13 +95,38 @@ async function verAlunosNotas(id_sala, id_disciplina) {
     } else {
         htmlConteudo += '<p>Nenhum aluno com notas encontrado para esta disciplina.</p>';
     }
-
-    // 3. Inserir no container
     notasContainer.innerHTML = htmlConteudo;
 }
 
+// async function salvarNotas(matricula, id_sala, id_disciplina, valor) {
+//         const resposta = await fetch("../api/func_sala_resp.php?acao=salvarNotas", {
+//             method: 'POST',
+//             headers: {'Content-Type': 'application/json'},
+//             body: JSON.stringify({
+//                 matrica: matricula,
+//                 id_sala: id_sala,
+//                 id_disciplina: id_disciplina,
+//                 lista_valores: valor
+//             })
+//          });
+// }
+
+
+// const btnSalvarNotas = document.getElementById("salvar-notas");
+// if (btnSalvarNotas) {
+//     btnSalvarNotas.addEventListener("click", () => {
+//     let valores = []
+//     document.querySelectorAll('.input-nota').forEach(input => {
+//         let matricula = input.getAttribute("data-matricula")
+//         valores.push(input.value);
+//         salvarNotas(matricula, id_sala, id_disciplina, valores);
+//     });
+//     window.location.reload();
+// })
+// }
+
+
 async function mostrarDisciplinas(id_sala, nome_sala) {
-    // 1. Chamar a API para obter as disciplinas
     const resposta = await fetch("../api/func_sala_resp.php?acao=disciplinaSala", {
         method: 'POST',
         headers: {
@@ -117,7 +136,6 @@ async function mostrarDisciplinas(id_sala, nome_sala) {
     });
     const disciplinas = await resposta.json();
 
-    // 2. Construir o HTML para as disciplinas (com o botão de ver alunos/notas)
     let htmlConteudo = `<h2 class="home-titulo">Sala: ${nome_sala}</h2>`;
     htmlConteudo += '<div id="lista-disciplinas-container">';
     if (disciplinas.length > 0) {
