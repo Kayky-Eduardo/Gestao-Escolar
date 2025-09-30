@@ -61,7 +61,6 @@ async function verAlunosNotas(id_sala, id_disciplina) {
     
     if (dados && dados.length > 0) {
         htmlConteudo += `
-        <button id="salvar-notas" class="salvar-notas">Salvar alterações</button>
             <table class="tabela-notas">
                 <thead>
                     <tr>
@@ -71,6 +70,7 @@ async function verAlunosNotas(id_sala, id_disciplina) {
                         <th>2º Bimestre</th>
                         <th>3º Bimestre</th>
                         <th>4º Bimestre</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,45 +85,88 @@ async function verAlunosNotas(id_sala, id_disciplina) {
                     <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_2 ?? ''}"></td>
                     <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_3 ?? ''}"></td>
                     <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_4 ?? ''}"></td>
+                    <td><button class="btn-salvar-notas">Salvar alterações</button></td>
                 </tr>
             `;
         });
 
         htmlConteudo += `</tbody></table>`;
     } else if (dados && dados.erro) {
-        htmlConteudo += `<p class="erro-api">Erro ao carregar notas: ${dados.erro}</p>`;
+        htmlConteudo += `<p>Erro ao carregar notas: ${dados.erro}</p>`;
     } else {
         htmlConteudo += '<p>Nenhum aluno com notas encontrado para esta disciplina.</p>';
     }
     notasContainer.innerHTML = htmlConteudo;
+    document.querySelectorAll('.btn-salvar-notas').forEach(button => {
+        button.addEventListener('click', (event) => {
+            salvarNotaPorAluno(event.target);
+        });
+    });
 }
 
-// async function salvarNotas(matricula, id_sala, id_disciplina, valor) {
-//         const resposta = await fetch("../api/func_sala_resp.php?acao=salvarNotas", {
-//             method: 'POST',
-//             headers: {'Content-Type': 'application/json'},
-//             body: JSON.stringify({
-//                 matrica: matricula,
-//                 id_sala: id_sala,
-//                 id_disciplina: id_disciplina,
-//                 lista_valores: valor
-//             })
-//          });
-// }
+async function salvarNotas(matricula, id_sala, id_disciplina, valoresNotas) {
+        const resposta = await fetch("../api/func_sala_resp.php?acao=salvarNotas", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                matricula: matricula,
+                id_sala: id_sala,
+                id_disciplina: id_disciplina,
+                lista_valores: valoresNotas
+            })
+         });
+        if (!resposta.ok) {
+            throw new Error(`Erro de rede: status ${resposta.status}`);
+        }
+        return resposta.json()
+}
 
+async function salvarNotaPorAluno(botaoSalvar) {
+    const tr = botaoSalvar.closest('tr');
+    const tabela = botaoSalvar.closest('.tabela-notas');
+    
+    if (!tr || !tabela) {
+        console.error("Não foi possível encontrar a linha ou tabela.");
+        return;
+    }
 
-// const btnSalvarNotas = document.getElementById("salvar-notas");
-// if (btnSalvarNotas) {
-//     btnSalvarNotas.addEventListener("click", () => {
-//     let valores = []
-//     document.querySelectorAll('.input-nota').forEach(input => {
-//         let matricula = input.getAttribute("data-matricula")
-//         valores.push(input.value);
-//         salvarNotas(matricula, id_sala, id_disciplina, valores);
-//     });
-//     window.location.reload();
-// })
-// }
+    const matricula = tr.getAttribute('data-matricula');
+    const id_sala = tabela.getAttribute('data-id-sala');
+    const id_disciplina = tabela.getAttribute('data-id-disciplina');
+
+    let valoresNotas = [];
+    const inputsNotas = tr.querySelectorAll('.nota-input');
+    
+    inputsNotas.forEach(input => {
+        let valor = input.value.trim().replace(',', '.');
+        valoresNotas.push(valor === '' ? null : parseFloat(valor));
+    });
+
+    if (!matricula || !id_sala || !id_disciplina) {
+        alert("Erro: Dados de aluno/sala/disciplina não encontrados.");
+        return;
+    }
+
+    try {
+        // Await substitui o .then()
+        const data = await salvarNotas(matricula, id_sala, id_disciplina, valoresNotas);
+        
+        // Verifica a resposta de sucesso do PHP (mesma lógica do .then)
+        if (data && data.success) {
+            // Adiciona feedback visual à linha
+            tr.classList.add('salvo-sucesso');
+            setTimeout(() => tr.classList.remove('salvo-sucesso'), 2000); // Remove o feedback após 2s
+            console.log("Notas salvas com sucesso!");
+        } else {
+            // Lida com a falha lógica do PHP (erro no banco)
+            alert("Erro ao salvar notas: " + (data.erro || "Falha desconhecida."));
+        }
+    } catch (error) {
+        // O bloco catch substitui o .catch()
+        console.error('Erro na requisição:', error);
+        alert(`Erro na comunicação com o servidor: ${error.message}`);
+    }
+}
 
 
 async function mostrarDisciplinas(id_sala, nome_sala) {

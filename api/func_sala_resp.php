@@ -99,23 +99,71 @@ function listarAlunosNotasDisciplina($conn, $id_sala, $id_disciplina) {
     return $alunosNotas;
 }
 
-// function adicionarNota($conn, $matricula, $id_sala, $id_disciplina, $lista_valores) {
-//     $bimestres = [1, 2, 3, 4];
-//     $valores = $lista_valores;
-//     for($i=0; $i<4; $i++) {
-//         $stmt = $conn->prepare("
-//         insert into nota (matricula, id_sala, id_disciplina, bimestre, valor)
-//         values (?, ?, ?, ?, ?);
-//         ");
-//         $stmt->bind_param("iiiid", $matricula, $id_sala, $id_disciplina, $bimestres[$i], $valores[$i]);
-//         if(!$stmt->execute()){
-//             echo "Execução do código sql falhou";
-//             return false;
-//         }
-//     }
-//     return true;
-// }
+function salvarNotas($conn, $matricula, $id_sala, $id_disciplina, $lista_valores) {
+    $bimestres = [1, 2, 3, 4];
+    
+    // Converte os valores para FLOAT e os armazena em um array.
+    $valores = array_map(function($valor) {
+        // Trata a string vazia ou null como PHP null, e vírgula como ponto
+        $valor = trim(str_replace(',', '.', $valor));
+        return (empty($valor) && $valor !== '0') ? null : (float)$valor;
+    }, $lista_valores);
 
+    $conn->begin_transaction(); // Inicia a transação
+    
+    try {
+        // Prepara os statements fora do loop para melhor performance
+        $stmt_update = $conn->prepare("
+            UPDATE nota SET valor = ?, data_registro = NOW()
+            WHERE matricula = ? AND id_disciplina = ? AND bimestre = ?
+        ");
+
+        $stmt_insert = $conn->prepare("
+            INSERT INTO nota (matricula, id_sala, id_disciplina, bimestre, valor)
+            VALUES (?, ?, ?, ?, ?)
+        ");
+        
+        for($i = 0; $i < 4; $i++) {
+            $bimestre = $bimestres[$i];
+            $valor = $valores[$i];
+            
+            // --- Lógica de UPDATE ---
+            $stmt_update->bind_param("siii", $valor, $matricula, $id_disciplina, $bimestre);
+            $stmt_update->execute();
+            
+            // Lança exceção em caso de erro no SQL
+            if ($stmt_update->error) {
+                 throw new \Exception("Erro no UPDATE SQL: " . $stmt_update->error);
+            }
+            
+            if ($stmt_update->affected_rows === 0) {
+                // --- Lógica de INSERT ---
+                if ($valor !== null) {
+                    $stmt_insert->bind_param("iiiis", $matricula, $id_sala, $id_disciplina, $bimestre, $valor);
+                    $stmt_insert->execute();
+                    
+                    // Lança exceção em caso de erro no SQL
+                    if ($stmt_insert->error) {
+                        throw new \Exception("Erro no INSERT SQL: " . $stmt_insert->error);
+                    }
+                }
+            }
+        }
+        
+        // Finaliza os statements
+        $stmt_update->close();
+        $stmt_insert->close();
+        
+        $conn->commit(); // Confirma todas as operações
+        return true;
+        
+    } catch (\Exception $e) { // <-- A alteração está aqui
+        $conn->rollback(); // Reverte se houver erro
+        // Loga o erro
+        error_log("Erro ao salvar notas (Transação): " . $e->getMessage());
+        return false;
+    }
+}
 
 $acao = $_GET['acao'] ?? null;
 $input = json_decode(file_get_contents('php://input'), true);
@@ -126,9 +174,16 @@ if ($acao == "alunosNotasDisciplina") {
     exit;
 }
 
-// if($acao == "salvarNotas") {
-//     echo json_encode(adicionarNota($conn, $input['matricula'], $input['id_sala'], $input['id_disciplina'], $input['valor']));
-// }
+if($acao == "salvarNotas") {
+    $success = salvarNotas($conn, $input['matricula'], $input['id_sala'], $input['id_disciplina'], $input['lista_valores']);
+    
+    if ($success) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'erro' => 'Falha ao processar as notas no banco de dados.']);
+    }
+    exit;
+}
 
 
 if ($acao == "listarSalasResponsavel") { 
