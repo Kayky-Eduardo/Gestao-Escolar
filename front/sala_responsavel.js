@@ -148,21 +148,16 @@ async function salvarNotaPorAluno(botaoSalvar) {
     }
 
     try {
-        // Await substitui o .then()
         const data = await salvarNotas(matricula, id_sala, id_disciplina, valoresNotas);
         
-        // Verifica a resposta de sucesso do PHP (mesma lógica do .then)
         if (data && data.success) {
-            // Adiciona feedback visual à linha
             tr.classList.add('salvo-sucesso');
-            setTimeout(() => tr.classList.remove('salvo-sucesso'), 2000); // Remove o feedback após 2s
+            setTimeout(() => tr.classList.remove('salvo-sucesso'), 2000);
             console.log("Notas salvas com sucesso!");
         } else {
-            // Lida com a falha lógica do PHP (erro no banco)
             alert("Erro ao salvar notas: " + (data.erro || "Falha desconhecida."));
         }
     } catch (error) {
-        // O bloco catch substitui o .catch()
         console.error('Erro na requisição:', error);
         alert(`Erro na comunicação com o servidor: ${error.message}`);
     }
