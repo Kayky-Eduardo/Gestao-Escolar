@@ -10,6 +10,8 @@ create table cargo (
     nivel int not null
 );
 
+insert into cargo (nome_cargo, nivel) values ("adm", 5);
+
 create table usuario (
     id_user int auto_increment primary key,
     nome_usuario varchar(100) not null,
@@ -19,6 +21,9 @@ create table usuario (
     id_cargo int not null,
     foreign key (id_cargo) references cargo(id_cargo)
 );
+
+insert into usuario (nome_usuario, email, senha, id_cargo) values
+("adm", "adm", 1234, 1);
 
 create table sala (
     id_sala int auto_increment primary key,
@@ -44,6 +49,13 @@ create table disciplina (
     nome varchar(100) not null
 );
 
+insert into disciplina (id_disciplina, nome) values
+(1, "matematica"),
+(2, "portugues"),
+(3, "geografia"),
+(4, "historia");
+
+
 create table sala_disciplina (
     id_sala int,
     id_disciplina int,
@@ -62,6 +74,7 @@ create table nota (
     bimestre tinyint not null, -- 1 a 4
     valor decimal(5,2) not null,
     data_registro datetime default current_timestamp,
+	UNIQUE KEY uk_nota_bimestre (matricula, id_disciplina, bimestre),
     foreign key (matricula) references aluno(matricula),
     foreign key (id_sala, id_disciplina) references sala_disciplina(id_sala, id_disciplina)
 );

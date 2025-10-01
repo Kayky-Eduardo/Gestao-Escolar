@@ -85,8 +85,6 @@ async function carregarSalas() {
         tdAcoes.appendChild(btnExcluir);
         tr.appendChild(tdAcoes);
         tabela.appendChild(tr);
-
-        
     });
 }
 

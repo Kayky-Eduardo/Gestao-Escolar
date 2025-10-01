@@ -61,7 +61,7 @@ async function verAlunosNotas(id_sala, id_disciplina) {
     
     if (dados && dados.length > 0) {
         htmlConteudo += `
-            <table class="tabela-notas">
+            <table class="tabela-notas" data-id-sala="${id_sala}" data-id-disciplina="${id_disciplina}">
                 <thead>
                     <tr>
                         <th>Matrícula</th>
@@ -78,13 +78,13 @@ async function verAlunosNotas(id_sala, id_disciplina) {
 
         dados.forEach(aluno => {
             htmlConteudo += `
-                <tr>
+                <tr data-matricula="${aluno.matricula}">
                     <td>${aluno.matricula}</td>
                     <td>${aluno.nome_aluno}</td>
-                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_1 ?? ''}"></td>
-                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_2 ?? ''}"></td>
-                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_3 ?? ''}"></td>
-                    <td><input type="text" class="nota-input" data-matricula="${aluno.matricula}" value="${aluno.bimestre_4 ?? ''}"></td>
+                    <td><input type="text" class="nota-input" value="${aluno.bimestre_1 ?? ''}"></td>
+                    <td><input type="text" class="nota-input" value="${aluno.bimestre_2 ?? ''}"></td>
+                    <td><input type="text" class="nota-input" value="${aluno.bimestre_3 ?? ''}"></td>
+                    <td><input type="text" class="nota-input" value="${aluno.bimestre_4 ?? ''}"></td>
                     <td><button class="btn-salvar-notas">Salvar alterações</button></td>
                 </tr>
             `;

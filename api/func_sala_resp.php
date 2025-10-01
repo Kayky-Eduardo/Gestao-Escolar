@@ -100,66 +100,82 @@ function listarAlunosNotasDisciplina($conn, $id_sala, $id_disciplina) {
 }
 
 function salvarNotas($conn, $matricula, $id_sala, $id_disciplina, $lista_valores) {
+    
+    // 1. CORREÇÃO: Inicializa os bimestres
     $bimestres = [1, 2, 3, 4];
     
-    // Converte os valores para FLOAT e os armazena em um array.
+    // 2. CORREÇÃO: Converte valores de entrada para FLOAT/NULL
     $valores = array_map(function($valor) {
         // Trata a string vazia ou null como PHP null, e vírgula como ponto
         $valor = trim(str_replace(',', '.', $valor));
+        // Se for string vazia ou null, retorna null (para deletar no banco)
+        // Se for '0', retorna (float)0
         return (empty($valor) && $valor !== '0') ? null : (float)$valor;
     }, $lista_valores);
 
     $conn->begin_transaction(); // Inicia a transação
+
+    // Prepara os statements fora do loop (melhor performance)
+    $stmt_delete = $conn->prepare("
+        DELETE FROM nota
+        WHERE matricula = ? AND id_disciplina = ? AND bimestre = ?
+    ");
+
+    $stmt_update = $conn->prepare("
+        UPDATE nota SET valor = ?, data_registro = NOW()
+        WHERE matricula = ? AND id_disciplina = ? AND bimestre = ?
+    ");
+
+    $stmt_insert = $conn->prepare("
+        INSERT INTO nota (matricula, id_sala, id_disciplina, bimestre, valor)
+        VALUES (?, ?, ?, ?, ?)
+    ");
     
     try {
-        // Prepara os statements fora do loop para melhor performance
-        $stmt_update = $conn->prepare("
-            UPDATE nota SET valor = ?, data_registro = NOW()
-            WHERE matricula = ? AND id_disciplina = ? AND bimestre = ?
-        ");
-
-        $stmt_insert = $conn->prepare("
-            INSERT INTO nota (matricula, id_sala, id_disciplina, bimestre, valor)
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        
         for($i = 0; $i < 4; $i++) {
             $bimestre = $bimestres[$i];
             $valor = $valores[$i];
             
-            // --- Lógica de UPDATE ---
-            $stmt_update->bind_param("siii", $valor, $matricula, $id_disciplina, $bimestre);
-            $stmt_update->execute();
-            
-            // Lança exceção em caso de erro no SQL
-            if ($stmt_update->error) {
-                 throw new \Exception("Erro no UPDATE SQL: " . $stmt_update->error);
+            if ($valor === null) {
+                $stmt_delete->bind_param("iii", $matricula, $id_disciplina, $bimestre);
+                $stmt_delete->execute();
+                
+                if ($stmt_delete->error) {
+                    throw new \Exception("Erro no DELETE SQL: " . $stmt_delete->error);
+                }
+                
+                continue; // Pula para o próximo bimestre
             }
             
+            $stmt_update->bind_param("diii", $valor, $matricula, $id_disciplina, $bimestre); 
+            $stmt_update->execute();
+            
+            if ($stmt_update->error) {
+                throw new \Exception("Erro no UPDATE SQL: " . $stmt_update->error);
+            }
+            
+            // --- B: INSERT (Se o UPDATE não afetou nenhuma linha) ---
             if ($stmt_update->affected_rows === 0) {
-                // --- Lógica de INSERT ---
-                if ($valor !== null) {
-                    $stmt_insert->bind_param("iiiis", $matricula, $id_sala, $id_disciplina, $bimestre, $valor);
-                    $stmt_insert->execute();
-                    
-                    // Lança exceção em caso de erro no SQL
-                    if ($stmt_insert->error) {
-                        throw new \Exception("Erro no INSERT SQL: " . $stmt_insert->error);
-                    }
+                // Usando 'd' para float/decimal
+                $stmt_insert->bind_param("iiiid", $matricula, $id_sala, $id_disciplina, $bimestre, $valor);
+                $stmt_insert->execute();
+                
+                if ($stmt_insert->error) {
+                    throw new \Exception("Erro no INSERT SQL: " . $stmt_insert->error);
                 }
             }
         }
         
         // Finaliza os statements
+        $stmt_delete->close(); 
         $stmt_update->close();
         $stmt_insert->close();
         
         $conn->commit(); // Confirma todas as operações
         return true;
         
-    } catch (\Exception $e) { // <-- A alteração está aqui
+    } catch (\Exception $e) { 
         $conn->rollback(); // Reverte se houver erro
-        // Loga o erro
         error_log("Erro ao salvar notas (Transação): " . $e->getMessage());
         return false;
     }
